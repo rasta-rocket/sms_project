@@ -42,19 +42,19 @@
  * data structures can go in the header file packet-PROTOABBREV.h. If not, then
  * a header file is not needed at all and this #include statement can be
  * removed. */
-#include "packet-PROTOABBREV.h"
+#include "packet-ndn.h"
 #endif
 
 /* Forward declaration that is needed below if using the
  * proto_reg_handoff_PROTOABBREV function as a callback for when protocol
  * preferences get changed. */
-void proto_reg_handoff_PROTOABBREV(void);
-void proto_register_PROTOABBREV(void);
+void proto_reg_handoff_ndn(void);
+void proto_register_ndn(void);
 
 /* Initialize the protocol and registered fields */
-static int proto_PROTOABBREV = -1;
-static int hf_PROTOABBREV_FIELDABBREV = -1;
-static expert_field ei_PROTOABBREV_EXPERTABBREV = EI_INIT;
+static int proto_ndn = -1;
+static int hf_ndn_FIELDABBREV = -1;
+static expert_field ei_ndn_EXPERTABBREV = EI_INIT;
 
 /* Global sample preference ("controls" display of numbers) */
 static gboolean gPREF_HEX = FALSE;
@@ -64,21 +64,21 @@ static gboolean gPREF_HEX = FALSE;
 static guint gPORT_PREF = 1234;
 
 /* Initialize the subtree pointers */
-static gint ett_PROTOABBREV = -1;
+static gint ett_ndn = -1;
 
 /* A sample #define of the minimum length (in bytes) of the protocol data.
  * If data is received with fewer than this many bytes it is rejected by
  * the current dissector. */
-#define PROTOABBREV_MIN_LENGTH 8
+#define ndn_MIN_LENGTH 8
 
 /* Code to actually dissect the packets */
 static int
-dissect_PROTOABBREV(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+dissect_ndn(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
         void *data _U_)
 {
     /* Set up structures needed to add the protocol subtree and manage it */
     proto_item *ti, *expert_ti;
-    proto_tree *PROTOABBREV_tree;
+    proto_tree *ndn_tree;
     /* Other misc. local variables. */
     guint offset = 0;
     int len = 0;
@@ -97,7 +97,7 @@ dissect_PROTOABBREV(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
      */
 
     /* Check that the packet is long enough for it to belong to us. */
-    if (tvb_reported_length(tvb) < PROTOABBREV_MIN_LENGTH)
+    if (tvb_reported_length(tvb) < ndn_MIN_LENGTH)
         return 0;
 
     /* Check that there's enough data present to run the heuristics. If there
@@ -141,7 +141,7 @@ dissect_PROTOABBREV(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
      */
 
     /* Set the Protocol column to the constant string of PROTOABBREV */
-    col_set_str(pinfo->cinfo, COL_PROTOCOL, "PROTOABBREV");
+    col_set_str(pinfo->cinfo, COL_PROTOCOL, "ndn");
 
 #if 0
     /* If you will be fetching any data from the packet before filling in
@@ -168,20 +168,20 @@ dissect_PROTOABBREV(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
      */
 
     /* create display subtree for the protocol */
-    ti = proto_tree_add_item(tree, proto_PROTOABBREV, tvb, 0, -1, ENC_NA);
+    ti = proto_tree_add_item(tree, proto_ndn, tvb, 0, -1, ENC_NA);
 
-    PROTOABBREV_tree = proto_item_add_subtree(ti, ett_PROTOABBREV);
+    ndn_tree = proto_item_add_subtree(ti, ett_ndn);
 
     /* Add an item to the subtree, see section 1.5 of README.dissector for more
      * information. */
-    expert_ti = proto_tree_add_item(PROTOABBREV_tree, hf_PROTOABBREV_FIELDABBREV, tvb,
+    expert_ti = proto_tree_add_item(ndn_tree, hf_ndn_FIELDABBREV, tvb,
             offset, len, ENC_xxx);
     offset += len;
     /* Some fields or situations may require "expert" analysis that can be
      * specifically highlighted. */
     if ( TEST_EXPERT_condition )
         /* value of hf_PROTOABBREV_FIELDABBREV isn't what's expected */
-        expert_add_info(pinfo, expert_ti, &ei_PROTOABBREV_EXPERTABBREV);
+        expert_add_info(pinfo, expert_ti, &ei_ndn_EXPERTABBREV);
 
     /* Continue adding tree items to process the packet here... */
 
@@ -199,16 +199,16 @@ dissect_PROTOABBREV(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
  * calls all the protocol registration.
  */
 void
-proto_register_PROTOABBREV(void)
+proto_register_ndn(void)
 {
-    module_t *PROTOABBREV_module;
-    expert_module_t* expert_PROTOABBREV;
+    module_t *ndn_module;
+    expert_module_t* expert_ndn;
 
     /* Setup list of header fields  See Section 1.5 of README.dissector for
      * details. */
     static hf_register_info hf[] = {
-        { &hf_PROTOABBREV_FIELDABBREV,
-            { "FIELDNAME", "PROTOABBREV.FIELDABBREV",
+        { &hf_ndn_FIELDABBREV,
+            { "FIELDNAME", "ndn.FIELDABBREV",
                FIELDTYPE, FIELDDISPLAY, FIELDCONVERT, BITMASK,
               "FIELDDESCR", HFILL }
         }
@@ -216,24 +216,24 @@ proto_register_PROTOABBREV(void)
 
     /* Setup protocol subtree array */
     static gint *ett[] = {
-        &ett_PROTOABBREV
+        &ett_ndn
     };
 
     /* Setup protocol expert items */
     static ei_register_info ei[] = {
-        { &ei_PROTOABBREV_EXPERTABBREV, { "PROTOABBREV.EXPERTABBREV", PI_SEVERITY, PI_GROUP, "EXPERTDESCR", EXPFILL }},
+        { &ei_ndn_EXPERTABBREV, { "ndn.EXPERTABBREV", PI_SEVERITY, PI_GROUP, "EXPERTDESCR", EXPFILL }},
     };
 
     /* Register the protocol name and description */
-    proto_PROTOABBREV = proto_register_protocol("PROTONAME",
-            "PROTOSHORTNAME", "PROTOABBREV");
+    proto_ndn = proto_register_protocol("PROTONAME",
+            "PROTOSHORTNAME", "ndn");
 
     /* Required function calls to register the header fields and subtrees */
-    proto_register_field_array(proto_PROTOABBREV, hf, array_length(hf));
+    proto_register_field_array(proto_ndn, hf, array_length(hf));
     proto_register_subtree_array(ett, array_length(ett));
     /* Required function calls to register expert items */
-    expert_PROTOABBREV = expert_register_protocol(proto_PROTOABBREV);
-    expert_register_field_array(expert_PROTOABBREV, ei, array_length(ei));
+    expert_ndn = expert_register_protocol(proto_ndn);
+    expert_register_field_array(expert_ndn, ei, array_length(ei));
 
     /* Register a preferences module (see section 2.6 of README.dissector
      * for more details). Registration of a prefs callback is not required
@@ -242,8 +242,8 @@ proto_register_PROTOABBREV(void)
      * If the prefs callback is not needed, use NULL instead of
      * proto_reg_handoff_PROTOABBREV in the following.
      */
-    PROTOABBREV_module = prefs_register_protocol(proto_PROTOABBREV,
-            proto_reg_handoff_PROTOABBREV);
+    ndn_module = prefs_register_protocol(proto_ndn,
+            proto_reg_handoff_ndn);
 
     /* Register a preferences module under the preferences subtree.
      * Only use this function instead of prefs_register_protocol (above) if you
@@ -255,18 +255,18 @@ proto_register_PROTOABBREV(void)
      * will be accessible under Protocols->OSI->X.500-><PROTOSHORTNAME>
      * preferences node.
      */
-    PROTOABBREV_module = prefs_register_protocol_subtree(const char *subtree,
-            proto_PROTOABBREV, proto_reg_handoff_PROTOABBREV);
+    ndn_module = prefs_register_protocol_subtree(const char *subtree,
+            proto_ndn, proto_reg_handoff_ndn);
 
     /* Register a simple example preference */
-    prefs_register_bool_preference(PROTOABBREV_module, "show_hex",
+    prefs_register_bool_preference(ndn_module, "show_hex",
             "Display numbers in Hex",
             "Enable to display numerical values in hexadecimal.",
             &gPREF_HEX);
 
     /* Register an example port preference */
-    prefs_register_uint_preference(PROTOABBREV_module, "tcp.port", "PROTOABBREV TCP Port",
-            " PROTOABBREV TCP port if other than the default",
+    prefs_register_uint_preference(ndn_module, "tcp.port", "ndn TCP Port",
+            " ndn TCP port if other than the default",
             10, &gPORT_PREF);
 }
 
@@ -286,10 +286,10 @@ proto_register_PROTOABBREV(void)
  * functions.
  */
 void
-proto_reg_handoff_PROTOABBREV(void)
+proto_reg_handoff_ndn(void)
 {
     static gboolean initialized = FALSE;
-    static dissector_handle_t PROTOABBREV_handle;
+    static dissector_handle_t ndn_handle;
     static int currentPort;
 
     if (!initialized) {
@@ -297,8 +297,8 @@ proto_reg_handoff_PROTOABBREV(void)
          * dissect_PROTOABBREV() returns the number of bytes it dissected (or 0
          * if it thinks the packet does not belong to PROTONAME).
          */
-        PROTOABBREV_handle = new_create_dissector_handle(dissect_PROTOABBREV,
-                proto_PROTOABBREV);
+        ndn_handle = new_create_dissector_handle(dissect_ndn,
+                proto_ndn);
         initialized = TRUE;
 
     } else {
@@ -311,29 +311,29 @@ proto_reg_handoff_PROTOABBREV(void)
          * preference can be saved using local statics in this
          * function (proto_reg_handoff).
          */
-        dissector_delete_uint("tcp.port", currentPort, PROTOABBREV_handle);
+        dissector_delete_uint("tcp.port", currentPort, ndn_handle);
     }
 
     currentPort = gPORT_PREF;
 
-    dissector_add_uint("tcp.port", currentPort, PROTOABBREV_handle);
+    dissector_add_uint("tcp.port", currentPort, ndn_handle);
 }
 
 #if 0
 /* Simpler form of proto_reg_handoff_PROTOABBREV which can be used if there are
  * no prefs-dependent registration function calls. */
 void
-proto_reg_handoff_PROTOABBREV(void)
+proto_reg_handoff_ndn(void)
 {
-    dissector_handle_t PROTOABBREV_handle;
+    dissector_handle_t ndn_handle;
 
     /* Use new_create_dissector_handle() to indicate that dissect_PROTOABBREV()
      * returns the number of bytes it dissected (or 0 if it thinks the packet
      * does not belong to PROTONAME).
      */
-    PROTOABBREV_handle = new_create_dissector_handle(dissect_PROTOABBREV,
-            proto_PROTOABBREV);
-    dissector_add_uint("PARENT_SUBFIELD", ID_VALUE, PROTOABBREV_handle);
+    ndn_handle = new_create_dissector_handle(dissect_ndn,
+            proto_ndn);
+    dissector_add_uint("PARENT_SUBFIELD", ID_VALUE, ndn_handle);
 }
 #endif
 
