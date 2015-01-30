@@ -53,6 +53,7 @@ void proto_register_ndn(void);
 
 /* Initialize the protocol and registered fields */
 static int proto_ndn = -1;
+
 static int hf_ndn_FIELDABBREV = -1;
 static expert_field ei_ndn_EXPERTABBREV = EI_INIT;
 
@@ -97,8 +98,8 @@ dissect_ndn(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
      */
 
     /* Check that the packet is long enough for it to belong to us. */
-    if (tvb_reported_length(tvb) < ndn_MIN_LENGTH)
-        return 0;
+    /*if (tvb_reported_length(tvb) < ndn_MIN_LENGTH)
+      return 0;*/
 
     /* Check that there's enough data present to run the heuristics. If there
      * isn't, reject the packet; it will probably be dissected as data and if
@@ -107,14 +108,14 @@ dissect_ndn(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
      * the packet you may not want to require *all* data to be present, but you
      * should ensure that the heuristic does not access beyond the captured
      * length of the packet regardless. */
-    if (tvb_captured_length(tvb) < MAX_NEEDED_FOR_HEURISTICS)
-        return 0;
+    /*if (tvb_captured_length(tvb) < MAX_NEEDED_FOR_HEURISTICS)
+      return 0;*/
 
     /* Fetch some values from the packet header using tvb_get_*(). If these
      * values are not valid/possible in your protocol then return 0 to give
      * some other dissector a chance to dissect it. */
-    if ( TEST_HEURISTICS_FAIL )
-        return 0;
+    /*if ( TEST_HEURISTICS_FAIL )
+      return 0;*/
 
     /*** COLUMN DATA ***/
 
@@ -141,7 +142,7 @@ dissect_ndn(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
      */
 
     /* Set the Protocol column to the constant string of PROTOABBREV */
-    col_set_str(pinfo->cinfo, COL_PROTOCOL, "ndn");
+    col_set_str(pinfo->cinfo, COL_PROTOCOL, "NDN");
 
 #if 0
     /* If you will be fetching any data from the packet before filling in
@@ -151,7 +152,7 @@ dissect_ndn(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
     col_clear(pinfo->cinfo, COL_INFO);
 #endif
 
-    col_set_str(pinfo->cinfo, COL_INFO, "XXX Request");
+    col_set_str(pinfo->cinfo, COL_INFO, "NDN packet ... to be contnued");
 
     /*** PROTOCOL TREE ***/
 
@@ -174,14 +175,17 @@ dissect_ndn(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
 
     /* Add an item to the subtree, see section 1.5 of README.dissector for more
      * information. */
-    expert_ti = proto_tree_add_item(ndn_tree, hf_ndn_FIELDABBREV, tvb,
-            offset, len, ENC_xxx);
+    /*expert_ti = proto_tree_add_item(ndn_tree, hf_ndn_FIELDABBREV, tvb,
+      offset, len, ENC_xxx);*/
+    proto_tree_add_item(ndn_tree, hf_ndn_packet_tlv_type, tvb, offset, 1, ENC_BIG_ENDIAN);
+    proto_tree_add_item(ndn_tree, hf_ndn_packet_tlv_length, tvb, ++offset, 1, ENC_BIG_ENDIAN);
+    proto_tree_add_item(ndn_tree, hf_ndn_packet_tlv_value, tvb, ++offset, -1, ENC_NA);
     offset += len;
     /* Some fields or situations may require "expert" analysis that can be
      * specifically highlighted. */
-    if ( TEST_EXPERT_condition )
+    /* if ( TEST_EXPERT_condition )*/
         /* value of hf_PROTOABBREV_FIELDABBREV isn't what's expected */
-        expert_add_info(pinfo, expert_ti, &ei_ndn_EXPERTABBREV);
+        /*expert_add_info(pinfo, expert_ti, &ei_ndn_EXPERTABBREV);*/
 
     /* Continue adding tree items to process the packet here... */
 
@@ -198,42 +202,103 @@ dissect_ndn(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
  * This format is require because a script is used to build the C function that
  * calls all the protocol registration.
  */
+
+static int hf_ndn_packet_tlv_type = -1;
+static int hf_ndn_packet_tlv_length = -1;
+static int hf_ndn_packet_tlv_value = -1;
+/*static int hf_ndn_name_tlv_type = -1;
+static int hf_ndn_name_tlv_length = -1;
+static int hf_ndn_name_tlv_value = -1;
+static int hf_ndn_selectors_tlv_type = -1;
+static int hf_ndn_selectors_tlv_length = -1;
+static int hf_ndn_selectors_tlv_value = -1;
+static int hf_ndn_minsuffix_tlv_type = -1;
+static int hf_ndn_minsuffix_tlv_length = -1;
+static int hf_ndn_minsuffix_tlv_value = -1;
+static int hf_ndn_maxsuffix_tlv_type = -1;
+static int hf_ndn_maxsuffix_tlv_length = -1;
+static int hf_ndn_maxsuffix_tlv_value = -1;
+static int hf_ndn_publickeylocator=-1;
+static int hf_ndn_exclude_tlv_type = -1;
+static int hf_ndn_exclude_tlv_length = -1;
+static int hf_ndn_exclude_tlv_value = -1;
+static int hf_ndn_childselector_tlv_type = -1;
+static int hf_ndn_childselector_tlv_length = -1;
+static int hf_ndn_childselector_tlv_value = -1;
+static int hf_ndn_mustbefresh_tlv_type = -1;
+static int hf_ndn_mustbefresh_tlv_length = -1;
+static int hf_ndn_nonce_tlv_type = -1;
+static int hf_ndn_nonce_tlv_length = -1;
+static int hf_ndn_nonce_tlv_value = -1;
+static int hf_ndn_scope_tlv_type = -1;
+static int hf_ndn_scope_tlv_length = -1;
+static int hf_ndn_scope_tlv_value = -1;
+static int hf_ndn_interestlifetime_tlv_type = -1;
+static int hf_ndn_interestlifetime_tlv_length = -1;
+static int hf_ndn_interestlifetime_tlv_value = -1;
+static int hf_ndn_metainfo_tlv_type = -1;
+static int hf_ndn_metainfo_tlv_length = -1;
+static int hf_ndn_metainfo_tlv_value = -1;
+static int hf_ndn_content_tlv_type = -1;
+static int hf_ndn_content_tlv_length = -1;
+static int hf_ndn_content_tlv_value = -1;
+*/
+
 void
 proto_register_ndn(void)
 {
-    module_t *ndn_module;
-    expert_module_t* expert_ndn;
+    /* module_t *ndn_module;
+     * expert_module_t* expert_ndn; */
 
     /* Setup list of header fields  See Section 1.5 of README.dissector for
      * details. */
     static hf_register_info hf[] = {
-        { &hf_ndn_FIELDABBREV,
-            { "FIELDNAME", "ndn.FIELDABBREV",
-               FIELDTYPE, FIELDDISPLAY, FIELDCONVERT, BITMASK,
-              "FIELDDESCR", HFILL }
+        /*{ &hf_ndn_packet_tlv_type,
+          { "Packet Type", "ndn.packettype",
+            FIELDTYPE, FIELDDISPLAY, FIELDCONVERT, BITMASK,
+            "FIELDDESCR", HFILL }
+            }*/
+        { &hf_ndn_packet_tlv_type,
+          { "Packet Type", "ndn.packettype",
+            FT_UINT8, BASE_HEX, NULL, 0x0,
+            NULL, HFILL }
+        }
+        { &hf_ndn_packet_tlv_length,
+          { "Packet Length", "ndn.packetlength",
+            FT_UINT8, BASE_DEC, NULL, 0x0,
+            NULL, HFILL }
+        }
+        { &hf_ndn_packet_tlv_value,
+          { "Packet Length", "ndn.packetvalue",
+            FT_BYTES, BASE_HEX, NULL, 0x0,
+            NULL, HFILL }
         }
     };
-
+    
     /* Setup protocol subtree array */
     static gint *ett[] = {
         &ett_ndn
     };
 
     /* Setup protocol expert items */
+    /*
     static ei_register_info ei[] = {
         { &ei_ndn_EXPERTABBREV, { "ndn.EXPERTABBREV", PI_SEVERITY, PI_GROUP, "EXPERTDESCR", EXPFILL }},
     };
+    */
 
     /* Register the protocol name and description */
-    proto_ndn = proto_register_protocol("PROTONAME",
-            "PROTOSHORTNAME", "ndn");
+    proto_ndn = proto_register_protocol("Named Data Network",
+            "NDN", "ndn");
 
     /* Required function calls to register the header fields and subtrees */
     proto_register_field_array(proto_ndn, hf, array_length(hf));
     proto_register_subtree_array(ett, array_length(ett));
     /* Required function calls to register expert items */
+    /*
     expert_ndn = expert_register_protocol(proto_ndn);
     expert_register_field_array(expert_ndn, ei, array_length(ei));
+    */
 
     /* Register a preferences module (see section 2.6 of README.dissector
      * for more details). Registration of a prefs callback is not required
@@ -242,8 +307,8 @@ proto_register_ndn(void)
      * If the prefs callback is not needed, use NULL instead of
      * proto_reg_handoff_PROTOABBREV in the following.
      */
-    ndn_module = prefs_register_protocol(proto_ndn,
-            proto_reg_handoff_ndn);
+    /* ndn_module = prefs_register_protocol(proto_ndn,
+     *       proto_reg_handoff_ndn); */
 
     /* Register a preferences module under the preferences subtree.
      * Only use this function instead of prefs_register_protocol (above) if you
@@ -255,19 +320,19 @@ proto_register_ndn(void)
      * will be accessible under Protocols->OSI->X.500-><PROTOSHORTNAME>
      * preferences node.
      */
-    ndn_module = prefs_register_protocol_subtree(const char *subtree,
-            proto_ndn, proto_reg_handoff_ndn);
+    /* ndn_module = prefs_register_protocol_subtree(const char *subtree,
+     *  proto_ndn, proto_reg_handoff_ndn);*/
 
     /* Register a simple example preference */
-    prefs_register_bool_preference(ndn_module, "show_hex",
+    /* prefs_register_bool_preference(ndn_module, "show_hex",
             "Display numbers in Hex",
             "Enable to display numerical values in hexadecimal.",
-            &gPREF_HEX);
+            &gPREF_HEX);*/
 
     /* Register an example port preference */
-    prefs_register_uint_preference(ndn_module, "tcp.port", "ndn TCP Port",
+    /* prefs_register_uint_preference(ndn_module, "tcp.port", "ndn TCP Port",
             " ndn TCP port if other than the default",
-            10, &gPORT_PREF);
+            10, &gPORT_PREF);*/
 }
 
 /* If this dissector uses sub-dissector registration add a registration routine.

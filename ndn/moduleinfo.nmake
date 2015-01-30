@@ -1,7 +1,7 @@
 #
 
 # The name
-PACKAGE=gryphon
+PACKAGE=ndn
 
 # The version
 MODULE_VERSION_MAJOR=0
