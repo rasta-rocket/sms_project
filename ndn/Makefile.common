@@ -1,4 +1,4 @@
-# Makefile.common for Gryphon plugin
+# Makefile.common for NDN plugin
 #     Contains the stuff from Makefile.am and Makefile.nmake that is
 #     a) common to both files and
 #     b) portable between both files
@@ -22,11 +22,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 # the name of the plugin
-PLUGIN_NAME = gryphon
+PLUGIN_NAME = ndn
 
 # Non-generated sources to be scanned for registration routines
 NONGENERATED_REGISTER_C_FILES = \
-	packet-gryphon.c
+	packet-ndn.c
 
 # Non-generated sources
 NONGENERATED_C_FILES = \
@@ -34,7 +34,7 @@ NONGENERATED_C_FILES = \
 
 # Headers.
 CLEAN_HEADER_FILES = \
-	packet-gryphon.h
+	packet-ndn.h
 
 HEADER_FILES = \
 	$(CLEAN_HEADER_FILES)

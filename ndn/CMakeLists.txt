@@ -20,7 +20,7 @@
 #
 
 set(DISSECTOR_SRC
-	packet-gryphon.c
+	packet-ndn.c
 )
 
 set(PLUGIN_FILES
@@ -47,16 +47,16 @@ register_dissector_files(plugin.c
 	${DISSECTOR_SRC}
 )
 
-add_library(gryphon ${LINK_MODE_MODULE}
+add_library(ndn ${LINK_MODE_MODULE}
 	${PLUGIN_FILES}
 )
-set_target_properties(gryphon PROPERTIES PREFIX "")
-set_target_properties(gryphon PROPERTIES LINK_FLAGS "${WS_LINK_FLAGS}")
-set_target_properties(gryphon PROPERTIES FOLDER "Plugins")
+set_target_properties(ndn PROPERTIES PREFIX "")
+set_target_properties(ndn PROPERTIES LINK_FLAGS "${WS_LINK_FLAGS}")
+set_target_properties(ndn PROPERTIES FOLDER "Plugins")
 
-target_link_libraries(gryphon epan)
+target_link_libraries(ndn epan)
 
-install(TARGETS gryphon
+install(TARGETS ndn
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/@CPACK_PACKAGE_NAME@/plugins/${CPACK_PACKAGE_VERSION} NAMELINK_SKIP
 	RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}/@CPACK_PACKAGE_NAME@/plugins/${CPACK_PACKAGE_VERSION}
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/@CPACK_PACKAGE_NAME@/plugins/${CPACK_PACKAGE_VERSION}

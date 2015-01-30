@@ -28,7 +28,7 @@
 #endif
 
 /* Name of package */
-#define PACKAGE "gryphon"
+#define PACKAGE "ndn"
 
 
 #ifdef VERSION

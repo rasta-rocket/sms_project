@@ -1,5 +1,5 @@
 # Makefile.am
-# Automake file for Gryphon plugin
+# Automake file for Ndn plugin
 # By Steve Limkemann <stevelim@dgtech.com>
 # Copyright 1998 Steve Limkemann
 #
@@ -34,16 +34,16 @@ endif
 
 plugindir = @plugindir@
 
-plugin_LTLIBRARIES = gryphon.la
+plugin_LTLIBRARIES = ndn.la
 
-gryphon_la_SOURCES = \
+ndn_la_SOURCES = \
 	plugin.c \
 	moduleinfo.h \
 	$(SRC_FILES)	\
 	$(HEADER_FILES)
 
-gryphon_la_LDFLAGS = -module -avoid-version
-gryphon_la_LIBADD = @PLUGIN_LIBS@
+ndn_la_LDFLAGS = -module -avoid-version
+ndn_la_LIBADD = @PLUGIN_LIBS@
 
 # Libs must be cleared, or else libtool won't create a shared module.
 # If your module needs to be linked against any particular libraries,
@@ -114,7 +114,7 @@ plugin.c: $(REGISTER_SRC_FILES) Makefile.common $(top_srcdir)/tools/make-dissect
 #	@rm -f $(distdir)/plugin.c
 
 CLEANFILES = \
-	gryphon \
+	ndn \
 	*~
 
 MAINTAINERCLEANFILES = \
