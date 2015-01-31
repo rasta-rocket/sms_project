@@ -56,6 +56,9 @@ static int proto_ndn = -1;
 
 static int hf_ndn_FIELDABBREV = -1;
 static expert_field ei_ndn_EXPERTABBREV = EI_INIT;
+static int hf_ndn_packet_tlv_type = -1;
+static int hf_ndn_packet_tlv_length = -1;
+static int hf_ndn_packet_tlv_value = -1;
 
 /* Global sample preference ("controls" display of numbers) */
 static gboolean gPREF_HEX = FALSE;
@@ -144,7 +147,7 @@ dissect_ndn(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
     /* Set the Protocol column to the constant string of PROTOABBREV */
     col_set_str(pinfo->cinfo, COL_PROTOCOL, "NDN");
 
-#if 0
+#if 1
     /* If you will be fetching any data from the packet before filling in
      * the Info column, clear that column first in case the calls to fetch
      * data from the packet throw an exception so that the Info column doesn't
@@ -203,9 +206,7 @@ dissect_ndn(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
  * calls all the protocol registration.
  */
 
-static int hf_ndn_packet_tlv_type = -1;
-static int hf_ndn_packet_tlv_length = -1;
-static int hf_ndn_packet_tlv_value = -1;
+
 /*static int hf_ndn_name_tlv_type = -1;
 static int hf_ndn_name_tlv_length = -1;
 static int hf_ndn_name_tlv_value = -1;
@@ -350,6 +351,7 @@ proto_register_ndn(void)
  * simpler form which can be used if there are no prefs-dependent registration
  * functions.
  */
+#if 0
 void
 proto_reg_handoff_ndn(void)
 {
@@ -384,7 +386,7 @@ proto_reg_handoff_ndn(void)
     dissector_add_uint("tcp.port", currentPort, ndn_handle);
 }
 
-#if 0
+#else
 /* Simpler form of proto_reg_handoff_PROTOABBREV which can be used if there are
  * no prefs-dependent registration function calls. */
 void
@@ -396,9 +398,8 @@ proto_reg_handoff_ndn(void)
      * returns the number of bytes it dissected (or 0 if it thinks the packet
      * does not belong to PROTONAME).
      */
-    ndn_handle = new_create_dissector_handle(dissect_ndn,
-            proto_ndn);
-    dissector_add_uint("PARENT_SUBFIELD", ID_VALUE, ndn_handle);
+    ndn_handle = new_create_dissector_handle(dissect_ndn, proto_ndn);
+    dissector_add_uint("ethertype", 0x8624, ndn_handle);
 }
 #endif
 
