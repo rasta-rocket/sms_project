@@ -1,6 +1,8 @@
 # Makefile.nmake
 # nmake file for Ndn plugin
 #
+# $Id$
+#
 
 include ..\..\config.nmake
 include ..\..\Makefile.nmake.inc
